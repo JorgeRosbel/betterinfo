@@ -3,10 +3,8 @@
 import argparse
 from utils.whois import whois
 from utils.get_tech import get_tech
-
-
-
-import json
+from pwn import log
+from termcolor import colored
 
 
 def main():
@@ -15,12 +13,33 @@ def main():
     parser.add_argument("domain", help="The domain name to query (e.g., google.com)")
     
     args = parser.parse_args()
+    p1 = log.progress("")
+    p1.status(colored(f"Analyzing domain: {args.domain}", "cyan"))
     basic = whois(args.domain)
+    p1.status(colored("Performing technology analysis...", "cyan"))
     tech = get_tech(args.domain)
+    p1.success(colored("Analysis complete!", "green"))
     
-    print(json.dumps(basic, indent=4))
-    print(json.dumps(tech, indent=4))
+    print(colored("\n=== Basic Information ===\n", "blue"))
 
+    for key, value in basic.items():
+        if isinstance(value, list):
+            value = " | ".join(value)
+        print(colored(f"{key.capitalize()}: ", "cyan") + colored(str(value), "yellow"))
+
+    print(colored("\n=== Technology Analysis ===\n", "blue"))
+    if isinstance(tech, str):
+        print(colored(tech, "red"))
+    else:
+        print(colored("Technologies Detected: ", "cyan") + colored(", ".join(tech["technologies"]), "yellow"))
+
+    print(colored("\n=== HTTP Headers ===\n", "blue"))
+    if isinstance(tech, str):
+        print(colored(tech, "red"))
+    else:
+        for key, value in tech["headers"].items():
+            print(colored(f"{key}: ", "cyan") + colored(value, "yellow"))
+    
 
 
 if __name__ == "__main__":

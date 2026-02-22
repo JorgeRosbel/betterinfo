@@ -1,17 +1,15 @@
 import requests
-from typing import List
-from typing import TypedDict, List
-import requests
+from typing import List, TypedDict
 
 
 class HtmlContent(TypedDict):
     html: str
-    headers: List[str]
+    headers: dict[str, str]
 
 
 class TechInfo(TypedDict):
     technologies: List[str]
-    headers: List[str]
+    headers:dict[str, str]
 
 
 def get_html(url: str) -> HtmlContent | str:
@@ -25,11 +23,11 @@ def get_html(url: str) -> HtmlContent | str:
 
     headers_to_check = [
     "X-Powered-By", "Server", "X-AspNet-Version", 
-    "Strict-Transport-Security", "Content-Security-Policy",
+    "Strict-Transport-Security",
     "X-Frame-Options", "X-Content-Type-Options"
     ]
 
-    headeres_found = []
+    headeres_found = {}
 
     try:
         full_url = url if url.startswith(('http://', 'https://')) else f"https://{url}"
@@ -39,7 +37,7 @@ def get_html(url: str) -> HtmlContent | str:
         
         for header in headers_to_check:
             value = response.headers.get(header, "Not Found")
-            headeres_found.append(f"{header}: {value}")
+            headeres_found[header] = value
         return {"html": response.text, "headers": headeres_found}
     except requests.exceptions.RequestException as e:
         return f"Error fetching HTML content: {e}"
