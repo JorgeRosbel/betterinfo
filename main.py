@@ -8,7 +8,7 @@ from utils.find_ip import get_ip
 from pwn import log
 from termcolor import colored
 from utils.find_location import get_geo_location
-from utils.find_mail_servers import find_mail_server
+from utils.find_mail_servers import find_mail_server, find_txt_records
 
 def main():
    
@@ -98,7 +98,19 @@ def main():
         for mx in mail_servers:
             print(f"{colored('Preference:', 'cyan', attrs=['bold'])} {colored(mx['preference'], 'yellow')}, {colored('Server:', 'cyan', attrs=['bold'])} {colored(mx['mail_server'], 'yellow')}")
 
-    print(colored("\n-----END OF ANALYSIS-----", "grey"))
+
+    txt_records = find_txt_records(args.domain)
+    if txt_records:
+        print(colored("\n----- TXT Records -----\n", "grey",attrs=["bold"]))
+        for record in txt_records:
+            if "v=spf1" in record:
+                print(f"[*] {colored('SPF (Email Security):', 'yellow')} {record}")
+                if "~all" in record:
+                    print(colored("    [!] Warning: Policy is set to SoftFail (~all).", "red"))
+            else:
+                print(f"[-] {record}")
+
+        print(colored("\n-----END OF ANALYSIS-----", "grey"))
     
 
 

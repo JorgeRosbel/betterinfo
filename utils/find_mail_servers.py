@@ -17,3 +17,11 @@ def find_mail_server(domain :str) -> List[MailServerInfo]:
         ]
     except (dns.resolver.NoAnswer, dns.resolver.NXDOMAIN, Exception):
         return []
+    
+
+def find_txt_records(domain):
+    try:
+        answers = dns.resolver.resolve(domain, 'TXT')
+        return [str(txt_data).strip('"') for txt_data in answers]
+    except (dns.resolver.NoAnswer, dns.resolver.NXDOMAIN, Exception):
+        return []
