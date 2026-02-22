@@ -20,25 +20,25 @@ def main():
     tech = get_tech(args.domain)
     p1.success(colored("Analysis complete!", "green"))
     
-    print(colored("\n=== Basic Information ===\n", "blue"))
+    print(colored("\n----- Whois & Registry Data -----\n", "grey", attrs=["bold"]))
 
     for key, value in basic.items():
         if isinstance(value, list):
             value = " | ".join(value)
-        print(colored(f"{key.capitalize()}: ", "cyan") + colored(str(value), "yellow"))
+        print(colored(f"{key.capitalize()}: ", "cyan",attrs=["bold"]) + colored(str(value), "yellow"))
 
-    print(colored("\n=== Technology Analysis ===\n", "blue"))
+    print(colored("\n----- Technology Analysis -----\n", "grey",attrs=["bold"]))
     if isinstance(tech, str):
         print(colored(tech, "red"))
     else:
-        print(colored("Technologies Detected: ", "cyan") + colored(", ".join(tech["technologies"]), "yellow"))
+        print(colored("Detected: ", "cyan",attrs=["bold"]) + colored(", ".join(tech["technologies"]), "yellow"))
 
-    print(colored("\n=== HTTP Headers ===\n", "blue"))
+    print(colored("\n----- HTTP Headers -----\n", "grey",attrs=["bold"]))
     if isinstance(tech, str):
         print(colored(tech, "red"))
     else:
         for key, value in tech["headers"].items():
-            print(colored(f"{key}: ", "cyan") + colored(value, "yellow"))
+            print(colored(f"{key}: ", "cyan",attrs=["bold"]) + colored(value, "yellow"))
     
 
 
