@@ -63,13 +63,22 @@ def main():
             print(colored(tech, "red"))
         else:
             for key, value in tech["headers"].items():
-                print(colored(f"{key}: ", "cyan",attrs=["bold"]) + colored(value, "yellow"))
+                if value == "Not Found":
+                    print(colored(f"{key}: ", "cyan",attrs=["bold"]) + colored(value, "red"))
+                else:                    
+                    print(colored(f"{key}: ", "cyan",attrs=["bold"]) + colored(value, "yellow"))
             
 
     print(colored("\n----- Subdomains Found -----\n", "grey",attrs=["bold"]))
     
     if not subdomains:
-        print(colored("\nNo subdomains found.", "red"))
+        print(colored("\n[!] No subdomains found.", "red", attrs=["bold"]))
+        print(colored(
+            "    Note: This could be due to API rate limits or the domain having no public records.\n"
+            "    Suggestions:\n"
+            "    - Try again in a few minutes.\n",
+            "yellow"
+        ))
     else:
         for i, sub in enumerate(subdomains, start=1):
             print(colored(f"{i}. ", "cyan",attrs=["bold"]) + colored(sub, "yellow"))

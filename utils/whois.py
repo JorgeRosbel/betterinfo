@@ -41,13 +41,14 @@ def whois(domain: str) -> DomainInfo | ErrorInfo:
                 creation_human = dt_crea.strftime("%d/%m/%y")
 
             return {
+                "domain_name": data.get("ldhName", "N/A").lower(),
                 "nameservers": [ns["ldhName"].lower() for ns in data["nameservers"]],
                 "registrar": [entities["href"] for entities in data["entities"][0]["links"] ][0],
                 "creation_date": creation_human,
                 "expiration_date": expiration_human,
                 "remaining_time_in_days": remaining_days,
                 "status": data.get("status", [])[0] if data.get("status") else "N/A",
-                "domain_name": data.get("ldhName", "N/A").lower(),
+    
             }
         elif response.status_code == 404:
             return {"error": f"The domain '{domain}' was not found."}
