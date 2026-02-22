@@ -43,14 +43,13 @@ def main():
             value = " | ".join(value)
         print(colored(f"{key.capitalize()}: ", "cyan",attrs=["bold"]) + colored(str(value), "yellow"))
 
-    if is_active and tech:
+    if is_active and tech and not isinstance(tech, str):
         print(colored("\n----- Technology Analysis -----\n", "grey",attrs=["bold"]))
-        if isinstance(tech, str):
-            print(colored(tech, "red"))
-        else:
-            print(colored("Detected: ", "cyan",attrs=["bold"]) + colored(", ".join(tech["technologies"]), "yellow"))
+        
+        for i, tech_name in enumerate(tech["technologies"], start=1):
+            print(colored(f"{i}. ", "cyan",attrs=["bold"]) + colored(tech_name, "yellow"))
 
-        print(colored("\n----- HTTP Headers -----\n", "grey",attrs=["bold"]))
+        print(colored("\n----- HTTP Response Headers -----\n", "grey",attrs=["bold"]))
         if isinstance(tech, str):
             print(colored(tech, "red"))
         else:
@@ -64,6 +63,8 @@ def main():
     else:
         for i, sub in enumerate(subdomains, start=1):
             print(colored(f"{i}. ", "cyan",attrs=["bold"]) + colored(sub, "yellow"))
+
+    print(colored("\n-----END OF ANALYSIS-----", "grey"))
     
 
 

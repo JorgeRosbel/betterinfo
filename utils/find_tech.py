@@ -55,6 +55,15 @@ def find_tech(url: str) -> TechInfo | str:
 
         if "_astro/" in html:
             results.append("Astro")
+        
+        if "gtag" in html:
+            results.append("Google Analytics")
+
+        if "elementor-section" in html:
+            results.append("Elementor")
+
+        if "https://www.googletagmanager.com" in html:
+            results.append("Google Tag Manager")
 
         if "text-" in html or "bg-" in html or "border-"  in html:
             results.append("Tailwind CSS")
