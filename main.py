@@ -4,8 +4,10 @@ import argparse
 from utils.whois import whois
 from utils.find_tech import find_tech
 from utils.find_subdomains import sublist3r_style_search
+from utils.find_ip import get_ip
 from pwn import log
 from termcolor import colored
+from utils.find_location import get_geo_location
 
 
 def main():
@@ -23,6 +25,7 @@ def main():
 
     is_active = args.active 
     tech = None
+    ip_address = None
 
    
     p1 = log.progress("")
@@ -31,6 +34,7 @@ def main():
     if is_active:
         p1.status(colored("Performing technology analysis...", "cyan"))
         tech = find_tech(args.domain)
+        ip_address = get_ip(args.domain)
     p1.status(colored("Finding subdomains...", "cyan"))
     subdomains = sublist3r_style_search(args.domain)
     p1.success(colored("Analysis complete!", "green"))
@@ -42,6 +46,9 @@ def main():
         if isinstance(value, list):
             value = " | ".join(value)
         print(colored(f"{key.capitalize()}: ", "cyan",attrs=["bold"]) + colored(str(value), "yellow"))
+    
+    if ip_address:
+        print(colored(f"Edge IP Address: ", "cyan",attrs=["bold"]) + colored(ip_address, "yellow"))
 
     if is_active and tech and not isinstance(tech, str):
         print(colored("\n----- Technology Analysis -----\n", "grey",attrs=["bold"]))
@@ -49,12 +56,15 @@ def main():
         for i, tech_name in enumerate(tech["technologies"], start=1):
             print(colored(f"{i}. ", "cyan",attrs=["bold"]) + colored(tech_name, "yellow"))
 
+    
+
         print(colored("\n----- HTTP Response Headers -----\n", "grey",attrs=["bold"]))
         if isinstance(tech, str):
             print(colored(tech, "red"))
         else:
             for key, value in tech["headers"].items():
                 print(colored(f"{key}: ", "cyan",attrs=["bold"]) + colored(value, "yellow"))
+            
 
     print(colored("\n----- Subdomains Found -----\n", "grey",attrs=["bold"]))
     
@@ -63,6 +73,15 @@ def main():
     else:
         for i, sub in enumerate(subdomains, start=1):
             print(colored(f"{i}. ", "cyan",attrs=["bold"]) + colored(sub, "yellow"))
+
+
+    location = get_geo_location(ip_address) if ip_address else None
+    if location:
+        print(colored("\n----- Geolocation Data -----\n", "grey",attrs=["bold"]))
+        print(colored(f"Country: ", "cyan",attrs=["bold"]) + colored(location['country'], "yellow"))
+        print(colored(f"City: ", "cyan",attrs=["bold"]) + colored(location['city'], "yellow"))
+        print(colored(f"Internet Service Provider: ", "cyan",attrs=["bold"]) + colored(location['isp'], "yellow"))
+        print(colored(f"Coordinates: ", "cyan",attrs=["bold"]) + colored(location['coordinates'], "yellow"))
 
     print(colored("\n-----END OF ANALYSIS-----", "grey"))
     
