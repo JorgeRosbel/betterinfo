@@ -1,9 +1,20 @@
 import requests
 from typing import List
-
+from typing import TypedDict, List
 import requests
 
-def get_html(url: str) -> str:
+
+class HtmlContent(TypedDict):
+    html: str
+    headers: List[str]
+
+
+class TechInfo(TypedDict):
+    technologies: List[str]
+    headers: List[str]
+
+
+def get_html(url: str) -> HtmlContent | str:
     headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36",
         "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8",
@@ -16,7 +27,9 @@ def get_html(url: str) -> str:
     "X-Powered-By", "Server", "X-AspNet-Version", 
     "Strict-Transport-Security", "Content-Security-Policy",
     "X-Frame-Options", "X-Content-Type-Options"
-]
+    ]
+
+    headeres_found = []
 
     try:
         full_url = url if url.startswith(('http://', 'https://')) else f"https://{url}"
@@ -26,16 +39,19 @@ def get_html(url: str) -> str:
         
         for header in headers_to_check:
             value = response.headers.get(header, "Not Found")
-            print(f"{header}: {value}")
-        return response.text
+            headeres_found.append(f"{header}: {value}")
+        return {"html": response.text, "headers": headeres_found}
     except requests.exceptions.RequestException as e:
         return f"Error fetching HTML content: {e}"
 
 
-def get_tech(url: str) -> List[str] | str:
+def get_tech(url: str) -> TechInfo | str:
     try:
-        raw_html = get_html(url)
-        html = raw_html.lower()
+        content = get_html(url)
+        if isinstance(content, str):
+            return content  
+        html = content["html"].lower()
+        headers = content["headers"]
 
         results = []
 
@@ -62,7 +78,7 @@ def get_tech(url: str) -> List[str] | str:
         if not results:
             results.append("Unknown Technology")
 
-        return results
+        return {"technologies": results, "headers": headers}
     
     except Exception as e:
         return f"Error analyzing technology: {e}"

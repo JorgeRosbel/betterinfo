@@ -15,10 +15,11 @@ def main():
     parser.add_argument("domain", help="The domain name to query (e.g., google.com)")
     
     args = parser.parse_args()
-    resultado = whois(args.domain)
+    basic = whois(args.domain)
+    tech = get_tech(args.domain)
     
-    print(json.dumps(resultado, indent=4))
-    print(get_tech(args.domain))
+    print(json.dumps(basic, indent=4))
+    print(json.dumps(tech, indent=4))
 
 
 
