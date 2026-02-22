@@ -3,6 +3,7 @@
 import argparse
 from utils.whois import whois
 from utils.get_tech import get_tech
+from utils.find_subdomains import sublist3r_style_search
 from pwn import log
 from termcolor import colored
 
@@ -18,7 +19,10 @@ def main():
     basic = whois(args.domain)
     p1.status(colored("Performing technology analysis...", "cyan"))
     tech = get_tech(args.domain)
+    p1.status(colored("Finding subdomains...", "cyan"))
+    subdomains = sublist3r_style_search(args.domain)
     p1.success(colored("Analysis complete!", "green"))
+
     
     print(colored("\n----- Whois & Registry Data -----\n", "grey", attrs=["bold"]))
 
@@ -39,6 +43,14 @@ def main():
     else:
         for key, value in tech["headers"].items():
             print(colored(f"{key}: ", "cyan",attrs=["bold"]) + colored(value, "yellow"))
+
+    print(colored("\n----- Subdomains Found -----\n", "grey",attrs=["bold"]))
+    
+    if not subdomains:
+        print(colored("\nNo subdomains found.", "red"))
+    else:
+        for i, sub in enumerate(subdomains, start=1):
+            print(colored(f"{i}. ", "cyan",attrs=["bold"]) + colored(sub, "yellow"))
     
 
 
