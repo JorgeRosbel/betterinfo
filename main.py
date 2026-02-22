@@ -8,7 +8,7 @@ from utils.find_ip import get_ip
 from pwn import log
 from termcolor import colored
 from utils.find_location import get_geo_location
-
+from utils.find_mail_servers import find_mail_server
 
 def main():
    
@@ -91,6 +91,12 @@ def main():
         print(colored(f"City: ", "cyan",attrs=["bold"]) + colored(location['city'], "yellow"))
         print(colored(f"Internet Service Provider: ", "cyan",attrs=["bold"]) + colored(location['isp'], "yellow"))
         print(colored(f"Coordinates: ", "cyan",attrs=["bold"]) + colored(location['coordinates'], "yellow"))
+
+    mail_servers = find_mail_server(args.domain)
+    if mail_servers:
+        print(colored("\n----- Mail Servers (MX Records) -----\n", "grey",attrs=["bold"]))
+        for mx in mail_servers:
+            print(f"{colored('Preference:', 'cyan', attrs=['bold'])} {colored(mx['preference'], 'yellow')}, {colored('Server:', 'cyan', attrs=['bold'])} {colored(mx['mail_server'], 'yellow')}")
 
     print(colored("\n-----END OF ANALYSIS-----", "grey"))
     
