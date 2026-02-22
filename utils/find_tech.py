@@ -43,7 +43,7 @@ def get_html(url: str) -> HtmlContent | str:
         return f"Error fetching HTML content: {e}"
 
 
-def get_tech(url: str) -> TechInfo | str:
+def find_tech(url: str) -> TechInfo | str:
     try:
         content = get_html(url)
         if isinstance(content, str):
@@ -55,6 +55,9 @@ def get_tech(url: str) -> TechInfo | str:
 
         if "_astro/" in html:
             results.append("Astro")
+
+        if "text-" in html or "bg-" in html or "border-"  in html:
+            results.append("Tailwind CSS")
 
         if any(x in html for x in ["wp-content", "wp-includes", "elementor/", "ver-wp"]):
             results.append("WordPress")

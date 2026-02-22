@@ -2,7 +2,7 @@
 
 import argparse
 from utils.whois import whois
-from utils.get_tech import get_tech
+from utils.find_tech import find_tech
 from utils.find_subdomains import sublist3r_style_search
 from pwn import log
 from termcolor import colored
@@ -30,7 +30,7 @@ def main():
     basic = whois(args.domain)
     if is_active:
         p1.status(colored("Performing technology analysis...", "cyan"))
-        tech = get_tech(args.domain)
+        tech = find_tech(args.domain)
     p1.status(colored("Finding subdomains...", "cyan"))
     subdomains = sublist3r_style_search(args.domain)
     p1.success(colored("Analysis complete!", "green"))
