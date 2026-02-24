@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 from termcolor import colored
+import time
 
 def fetcher(url):
     headers = {
@@ -27,7 +28,7 @@ def extract_urls_from_sitemap(sitemap_content):
     return urls
 
 
-def find_sitemaps(url):
+def find_sitemaps(url:str, rate_limit:int | float | None = None) -> list[str] | None:
     urls = []
     sitemaps_names = [
     "/sitemap.xml",
@@ -75,8 +76,10 @@ def find_sitemaps(url):
     "/sitemap/index.xml",
     "/feed/sitemap.xml",
 ]
-    for sitemap in sitemaps_names:
-        print(colored(f"[i] checking for sitemap: {sitemap}", "grey", attrs=["bold"]).ljust(80), end="\r", flush=True)
+    for i,sitemap in enumerate(sitemaps_names, start=1):
+        print(colored(f"[i] checking for sitemap: {sitemap} ({i}/{len(sitemaps_names)}) ", "grey", attrs=["bold"]).ljust(80), end="\r", flush=True)
+        if rate_limit:
+            time.sleep(rate_limit)
         try:
             fetcher_response = fetcher(f'{url}{sitemap}')
             if fetcher_response:

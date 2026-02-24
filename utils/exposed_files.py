@@ -1,7 +1,8 @@
 import requests
 from termcolor import colored
+import time
 
-def check_exposed_files(domain):
+def check_exposed_files(domain, rate_limit: int | float | None = None) -> list[dict[str, str | int]] | None:
     """
     Scans for common exposed files and returns a list of results.
     """
@@ -22,9 +23,11 @@ def check_exposed_files(domain):
     }
     results = []
     
-    for path in paths:
+    for i,path in enumerate(paths, start=1):
         url = f"https://{domain}/{path.lstrip('/')}"
-        print(colored(f"[i] checking for exposed file: {path}", "grey", attrs=["bold"]).ljust(80), end="\r", flush=True)
+        print(colored(f"[i] checking for exposed file: {path} ({i}/{len(paths)})", "grey", attrs=["bold"]).ljust(80), end="\r", flush=True)
+        if rate_limit:
+            time.sleep(rate_limit)
         try:
             response = requests.get(url, headers=headers, timeout=4, allow_redirects=False)
             status = response.status_code

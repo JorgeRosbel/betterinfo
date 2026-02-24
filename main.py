@@ -23,6 +23,11 @@ def main():
     parser = argparse.ArgumentParser(description="Gather domain information from a given domain name.")
     parser.add_argument("domain", help="The domain name to query (e.g., domain.com)")
     parser.add_argument(
+        "-r", "--rate-limit",
+        dest="rate_limit",
+        help="Set a custom rate limit (in seconds) between API requests to avoid hitting rate limits. Default is none (no delay).", 
+    )
+    parser.add_argument(
         "-a", "--active",
         dest="active",
         action="store_true",
@@ -54,11 +59,13 @@ def main():
     subdomains = sublist3r_style_search(args.domain)
 
     if is_active:
-        p1.status(colored("Searching for sitemaps and robots.txt...", "cyan"))
-        sitemaps = find_sitemaps(args.domain)
+        rate = f"(rate_limit:{args.rate_limit}s)" if args.rate_limit else "(no rate limit)"
+        rate_limit=float(args.rate_limit) if args.rate_limit else None
+        p1.status(colored(f"Searching for sitemaps and robots.txt... {rate}", "cyan"))
+        sitemaps = find_sitemaps(args.domain, rate_limit=rate_limit)
         robots = find_robots(args.domain)
-        p1.status(colored("Checking for exposed files...", "cyan"))
-        exposed_files = check_exposed_files(args.domain)
+        p1.status(colored(f"Checking for exposed files... {rate}", "cyan"))
+        exposed_files = check_exposed_files(args.domain, rate_limit=rate_limit)
     p1.success(colored("Analysis complete!", "green"))
 
     
