@@ -55,6 +55,7 @@ def main():
         p1.status(colored("Performing technology analysis...", "cyan"))
         tech = find_tech(args.domain)
         ip_address = get_ip(args.domain)
+
     p1.status(colored("Finding subdomains...", "cyan"))
     subdomains = sublist3r_style_search(args.domain)
 
@@ -68,6 +69,13 @@ def main():
         exposed_files = check_exposed_files(args.domain, rate_limit=rate_limit)
     p1.success(colored("Analysis complete!", "green"))
 
+
+    print(colored("\n----- Website Metadata -----\n", "grey", attrs=["bold"]))
+    if tech and isinstance(tech, dict) and "metadata" in tech:
+        metadata = tech["metadata"]
+        for key, value in metadata.items():
+            print(colored(f"{key.capitalize()}: ", "cyan",attrs=["bold"]) + colored(str(value), "yellow"))
+
     
     print(colored("\n----- Whois & Registry Data -----\n", "grey", attrs=["bold"]))
 
@@ -79,19 +87,20 @@ def main():
     if ip_address:
         print(colored(f"Edge IP Address: ", "cyan",attrs=["bold"]) + colored(ip_address, "yellow"))
 
-    if is_active and tech and not isinstance(tech, str):
+    if is_active and tech and isinstance(tech, dict):
         print(colored("\n----- Technology Analysis -----\n", "grey",attrs=["bold"]))
         
         for i, tech_name in enumerate(tech["technologies"], start=1):
             print(colored(f"{i}. ", "cyan",attrs=["bold"]) + colored(tech_name, "yellow"))
+        
+        print(colored("\n----- WordPress Plugins Found -----\n", "grey",attrs=["bold"]))
+        for i, plugin in enumerate(tech["plugins"], start=1):
+            print(colored(f"Plugin {i}: ", "cyan",attrs=["bold"]) + colored(f"{plugin['name']} (Version: {plugin['version']})", "yellow"))
 
     
 
         print(colored("\n----- HTTP Response Headers -----\n", "grey",attrs=["bold"]))
-        if isinstance(tech, str):
-            print(colored(tech, "red"))
-        else:
-            for key, value in tech["headers"].items():
+        for key, value in tech["headers"].items():
                 if value == "Not Found":
                     print(colored(f"{key}: ", "cyan",attrs=["bold"]) + colored(value, "red"))
                 else:                    
@@ -156,8 +165,23 @@ def main():
         print(colored("\n----- Exposed Files Check -----\n", "grey",attrs=["bold"]))
         if exposed_files:
             for entry in exposed_files:
-                status_color = "green" if entry["status"] == 200 else "yellow" if entry["status"] == "Error" else "red"
-                print(colored(f"{entry['tested_path']}: ", "cyan",attrs=["bold"]) + colored(str(entry["status"]), status_color))
+                if entry["status"] == 200:
+                    status_color = colored(entry["status"], "green")
+                    text_info = colored(" [Potentially Exposed]", "red")
+                    path_info = colored(f"{entry['tested_path']}: ", "cyan",attrs=["bold"])
+                elif entry["status"] in [401, 403]:
+                    status_color = colored(entry["status"], "yellow") 
+                    text_info = colored(" [Access Restricted]", "yellow")
+                    path_info = colored(f"{entry['tested_path']}: ", "cyan",attrs=["bold"])
+                else:
+                    status_color = colored(entry["status"], "grey")
+                    text_info = colored(" [Not Found]", "grey", attrs=["bold"])
+                    path_info = colored(f"{entry['tested_path']}: ", "grey",attrs=["bold"])
+            
+                print(path_info + status_color + text_info)
+
+
+            print(colored("\nSummary: ", "cyan",attrs=["bold"]) + colored(f"{sum(1 for e in exposed_files if e['status'] == 200)} potentially exposed files found.", "yellow"))
         else:
             print(colored("\n[!] No exposed files found or accessible.", "red", attrs=["bold"]))
 

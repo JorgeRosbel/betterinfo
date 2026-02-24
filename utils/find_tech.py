@@ -1,5 +1,7 @@
 import requests
-from typing import List, TypedDict
+from typing import List, TypedDict,Optional
+from .extract_metadata import extract_metadata, Metadata
+import re
 
 
 class HtmlContent(TypedDict):
@@ -10,6 +12,96 @@ class HtmlContent(TypedDict):
 class TechInfo(TypedDict):
     technologies: List[str]
     headers:dict[str, str]
+    metadata: Metadata
+    plugins: List[dict[str, str]]
+
+
+def get_wordpress_plugins(html: str) -> list[dict]:
+    """
+    Extrae los plugins de WordPress usados en un sitio web
+    a partir del HTML plano de la página.
+
+    Args:
+        html: Contenido HTML de la página como string.
+
+    Returns:
+        Lista de dicts con { name, version, source } de cada plugin encontrado.
+    """
+    plugins: dict[str, dict] = {}
+
+    # --- Patrón 1: rutas en /wp-content/plugins/<plugin-name>/ ---
+    # Cubre <script src>, <link href>, <img src>, etc.
+    pattern_path = re.compile(
+        r'/wp-content/plugins/([a-zA-Z0-9_-]+)(?:/[^"\'>\s]*)?'
+        r'(?:["\'\s].*?(?:ver|version)[=\s]+["\']?([0-9][0-9a-zA-Z._-]*))?',
+        re.IGNORECASE,
+    )
+
+    for match in pattern_path.finditer(html):
+        name = match.group(1)
+        version = match.group(2)  # puede ser None
+
+        if name not in plugins:
+            plugins[name] = {
+                "name": name,
+                "version": version or "unknown",
+                "source": "wp-content/plugins path",
+            }
+        elif version and plugins[name]["version"] == "unknown":
+            plugins[name]["version"] = version
+
+    # --- Patrón 2: ?ver=X.X.X en assets conocidos de plugins ---
+    # Captura la versión de assets ya detectados por el patrón anterior
+    pattern_ver = re.compile(
+        r'/wp-content/plugins/([a-zA-Z0-9_-]+)/[^"\'>\s]*\?(?:[^"\'>\s]*&)?ver=([0-9][0-9a-zA-Z._-]*)',
+        re.IGNORECASE,
+    )
+    for match in pattern_ver.finditer(html):
+        name = match.group(1)
+        version = match.group(2)
+        if name in plugins and plugins[name]["version"] == "unknown":
+            plugins[name]["version"] = version
+
+    # --- Patrón 3: comentarios HTML generados por plugins ---
+    # Ej: <!-- This site is using Plugin Name 1.2.3 -->
+    pattern_comment = re.compile(
+        r'<!--[^-]*?plugin[s]?\s*[:\-]?\s*([a-zA-Z0-9][a-zA-Z0-9_\- ]{2,40}?)(?:\s+v?([0-9][0-9a-zA-Z._-]*))?(?:\s+active|\s+enabled|-->)',
+        re.IGNORECASE,
+    )
+    for match in pattern_comment.finditer(html):
+        raw_name = match.group(1).strip()
+        version = match.group(2)
+        slug = raw_name.lower().replace(" ", "-")
+        if slug and slug not in plugins:
+            plugins[slug] = {
+                "name": raw_name,
+                "version": version or "unknown",
+                "source": "HTML comment",
+            }
+
+    # --- Patrón 4: generator meta tag (algunos plugins lo usan) ---
+    pattern_meta = re.compile(
+        r'<meta[^>]+name=["\']generator["\'][^>]+content=["\']([^"\']+)["\']',
+        re.IGNORECASE,
+    )
+    for match in pattern_meta.finditer(html):
+        content = match.group(1)
+        # Excluir el propio WordPress core
+        if "wordpress" in content.lower():
+            continue
+        # Ej: "WooCommerce 7.0.0"
+        parts = content.rsplit(" ", 1)
+        name = parts[0].strip()
+        version = parts[1] if len(parts) == 2 and re.match(r"[0-9]", parts[1]) else "unknown"
+        slug = name.lower().replace(" ", "-")
+        if slug not in plugins:
+            plugins[slug] = {
+                "name": name,
+                "version": version,
+                "source": "meta generator",
+            }
+
+    return list(plugins.values())
 
 
 def get_html(url: str) -> HtmlContent | str:
@@ -68,6 +160,8 @@ def find_tech(url: str) -> TechInfo | str:
         content = get_html(url)
         if isinstance(content, str):
             return content  
+        
+        metadata = extract_metadata(content["html"])
         html = content["html"].lower()
         headers = content["headers"]
 
@@ -108,7 +202,7 @@ def find_tech(url: str) -> TechInfo | str:
         if not results:
             results.append("Unknown Technology")
 
-        return {"technologies": results, "headers": headers}
+        return {"technologies": results, "headers": headers, "metadata": metadata , "plugins": get_wordpress_plugins(html)}
     
     except Exception as e:
         return f"Error analyzing technology: {e}"
