@@ -13,7 +13,6 @@ from utils.find_mail_servers import find_mail_server, find_txt_records
 from utils.sitemaps_robots import find_sitemaps, find_robots
 from utils.exposed_files import check_exposed_files
 
-
 def validate_domain(domain):
     pattern = r'^([a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}$'
     return re.match(pattern, domain)
@@ -32,6 +31,11 @@ def main():
         dest="active",
         action="store_true",
         help="Modo de escaneo: pasivo (consultas a APIs) o activo (interacción directa)"
+    )
+    parser.add_argument(
+        "-oN", "--output-name",
+        dest="output_name",
+        help="Set a custom output file name (default is domain_report.txt).", 
     )
     
 
@@ -184,8 +188,65 @@ def main():
         else:
             print(colored("\n[!] No exposed files found or accessible.", "red", attrs=["bold"]))
 
-        print(colored("\n-----END OF ANALYSIS-----", "grey"))
+    print(colored("\n-----END OF ANALYSIS-----", "grey"))
+
+
     
+    full_text = f"""
+----- Website Metadata -----
+Title: {tech['metadata']['title'] if tech and isinstance(tech, dict) and 'metadata' in tech else 'N/A'}
+Description: {tech['metadata']['description'] if tech and isinstance(tech, dict) and 'metadata' in tech else 'N/A'}
+
+----- Whois & Registry Data -----
+{chr(10).join([f"{key.capitalize()}: {value if not isinstance(value, list) else ' | '.join(value)}" for key, value in basic.items()])}
+Edge IP Address: {ip_address if ip_address else 'N/A'}
+
+----- Technology Analysis -----
+{chr(10).join([f"{i}. {tech_name}" for i, tech_name in enumerate(tech['technologies'], start=1)]) if tech and isinstance(tech, dict) and 'technologies' in tech else 'N/A'}
+
+--- WordPress Plugins Found ---
+{chr(10).join([f"Plugin {i}: {plugin['name']} (Version: {plugin['version']})" for i, plugin in enumerate(tech['plugins'], start=1)]) if tech and isinstance(tech, dict) and 'plugins' in tech and len(tech['plugins']) > 0 else 'N/A'}
+
+----- Subdomains Found -----
+{chr(10).join([f"{i}. {sub}" for i, sub in enumerate(subdomains, start=1)]) if subdomains else 'N/A'}
+
+----- Geolocation Data -----
+Country: {location['country'] if location else 'N/A'}
+City: {location['city'] if location else 'N/A'}
+Internet Service Provider: {location['isp'] if location else 'N/A'}
+Coordinates: {location['coordinates'] if location else 'N/A'}
+
+----- Mail Servers (MX Records) -----
+{chr(10).join([f"Preference: {mx['preference']}, Server: {mx['mail_server']}" for mx in mail_servers]) if mail_servers else 'N/A'}
+
+----- TXT Records -----
+{chr(10).join([f"{record}" for record in txt_records]) if txt_records else 'N/A'}
+
+----- Internal URLs Found -----
+{chr(10).join([f"{i}. {sitemap}" for i, sitemap in enumerate(sitemaps, start=1)]) if sitemaps else 'N/A'}
+
+----- robots.txt Content -----
+{robots if robots else 'N/A'}
+
+----- Exposed Files Check -----
+{chr(10).join([
+    f"{entry['tested_path']}: {entry['status']} {'[Potentially Exposed]' if entry['status'] == 200 else '[Access Restricted]'}" 
+    for entry in exposed_files 
+    if entry['status'] in [200, 401, 403]
+]) if exposed_files else 'N/A'}
+Summary: {sum(1 for e in exposed_files if e['status'] == 200) if exposed_files else 0} potentially exposed files found.
+-----END OF ANALYSIS-----   
+        """
+    
+
+    file_name = args.output_name if args.output_name else f"{args.domain}_report.txt"
+    
+    with open(file_name, "w") as f:
+        f.write(full_text)
+        print(colored(f"\nReport saved to {file_name}", "green", attrs=["bold"]))
+
+    
+
 
 
 if __name__ == "__main__":

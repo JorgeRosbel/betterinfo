@@ -73,6 +73,8 @@ source ~/.bashrc
 | Passive recon (safe, no direct contact) | `betterinfo domain.com` |
 | Full active audit | `betterinfo domain.com -a` |
 | Active audit with request delay | `betterinfo domain.com -a -r 3` |
+| Save report to file (custom name) | `betterinfo domain.com -oN report.txt` |
+| Full active audit saving to file | `betterinfo domain.com -a -oN report.txt` |
 
 ### `-r` Flag — Rate Limiting
 The `-r <seconds>` flag adds a delay between requests. Strongly recommended during active scans to avoid triggering WAF rate limits and to reduce your footprint on the target server.
