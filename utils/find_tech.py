@@ -1,5 +1,5 @@
 import requests
-from typing import List, TypedDict,Optional
+from typing import List, TypedDict
 from .extract_metadata import extract_metadata, Metadata
 import re
 
@@ -86,10 +86,10 @@ def get_wordpress_plugins(html: str) -> list[dict]:
     )
     for match in pattern_meta.finditer(html):
         content = match.group(1)
-        # Excluir el propio WordPress core
+       
         if "wordpress" in content.lower():
             continue
-        # Ej: "WooCommerce 7.0.0"
+        
         parts = content.rsplit(" ", 1)
         name = parts[0].strip()
         version = parts[1] if len(parts) == 2 and re.match(r"[0-9]", parts[1]) else "unknown"

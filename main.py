@@ -93,11 +93,10 @@ def main():
         for i, tech_name in enumerate(tech["technologies"], start=1):
             print(colored(f"{i}. ", "cyan",attrs=["bold"]) + colored(tech_name, "yellow"))
         
-        print(colored("\n----- WordPress Plugins Found -----\n", "grey",attrs=["bold"]))
-        for i, plugin in enumerate(tech["plugins"], start=1):
-            print(colored(f"Plugin {i}: ", "cyan",attrs=["bold"]) + colored(f"{plugin['name']} (Version: {plugin['version']})", "yellow"))
-
-    
+        if len(tech["plugins"]) > 0:
+            print(colored("\n----- WordPress Plugins Found -----\n", "grey",attrs=["bold"]))
+            for i, plugin in enumerate(tech["plugins"], start=1):
+                print(colored(f"Plugin {i}: ", "cyan",attrs=["bold"]) + colored(f"{plugin['name']} (Version: {plugin['version']})", "yellow"))
 
         print(colored("\n----- HTTP Response Headers -----\n", "grey",attrs=["bold"]))
         for key, value in tech["headers"].items():
