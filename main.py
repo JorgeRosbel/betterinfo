@@ -9,6 +9,7 @@ from pwn import log
 from termcolor import colored
 from utils.find_location import get_geo_location
 from utils.find_mail_servers import find_mail_server, find_txt_records
+from utils.sitemaps_robots import find_sitemaps, find_robots
 
 def main():
    
@@ -26,6 +27,8 @@ def main():
     is_active = args.active 
     tech = None
     ip_address = None
+    sitemaps = None
+    robots = None
 
    
     p1 = log.progress("")
@@ -37,6 +40,11 @@ def main():
         ip_address = get_ip(args.domain)
     p1.status(colored("Finding subdomains...", "cyan"))
     subdomains = sublist3r_style_search(args.domain)
+
+    if is_active:
+        p1.status(colored("Searching for sitemaps and robots.txt...", "cyan"))
+        sitemaps = find_sitemaps(args.domain)
+        robots = find_robots(args.domain)
     p1.success(colored("Analysis complete!", "green"))
 
     
@@ -109,6 +117,20 @@ def main():
                     print(colored("    [!] Warning: Policy is set to SoftFail (~all).", "red"))
             else:
                 print(f"[-] {record}")
+
+    if is_active:
+        print(colored("\n----- Internal URLs Found -----\n", "grey",attrs=["bold"]))
+        if sitemaps:
+            for i, sitemap in enumerate(sitemaps, start=1):
+                print(colored(f"{i}. ", "cyan",attrs=["bold"]) + colored(sitemap, "yellow"))
+        else:
+            print(colored("\n[!] No sitemaps found or accessible.", "red", attrs=["bold"]))
+
+        print(colored("\n----- robots.txt Content -----\n", "grey",attrs=["bold"]))
+        if robots:
+            print(colored(robots, "yellow"))
+        else:
+            print(colored("\n[!] No robots.txt found or accessible.", "red", attrs=["bold"]))
 
         print(colored("\n-----END OF ANALYSIS-----", "grey"))
     
