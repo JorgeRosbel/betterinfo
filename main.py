@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import re
 import argparse
 from utils.whois import whois
 from utils.find_tech import find_tech
@@ -12,18 +13,27 @@ from utils.find_mail_servers import find_mail_server, find_txt_records
 from utils.sitemaps_robots import find_sitemaps, find_robots
 from utils.exposed_files import check_exposed_files
 
+
+def validate_domain(domain):
+    pattern = r'^([a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}$'
+    return re.match(pattern, domain)
+
 def main():
    
     parser = argparse.ArgumentParser(description="Gather domain information from a given domain name.")
-    parser.add_argument("domain", help="The domain name to query (e.g., google.com)")
+    parser.add_argument("domain", help="The domain name to query (e.g., domain.com)")
     parser.add_argument(
         "-a", "--active",
         dest="active",
         action="store_true",
         help="Modo de escaneo: pasivo (consultas a APIs) o activo (interacción directa)"
     )
+    
 
     args = parser.parse_args()
+    if not validate_domain(args.domain):
+        print(colored("Error: Invalid domain format. Please provide a valid domain (e.g., domain.com).", "red"))
+        return
 
     is_active = args.active 
     tech = None
