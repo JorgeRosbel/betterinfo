@@ -13,6 +13,16 @@ class TechInfo(TypedDict):
 
 
 def get_html(url: str) -> HtmlContent | str:
+    """
+    Fetches the HTML content and specific security/technology headers from a given URL.
+
+    Args:
+        url (str): The target URL or domain.
+
+    Returns:
+        dict | str: A dictionary containing 'html' and 'headers' if successful, 
+                     otherwise an error message string.
+    """
     headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36",
         "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8",
@@ -44,6 +54,16 @@ def get_html(url: str) -> HtmlContent | str:
 
 
 def find_tech(url: str) -> TechInfo | str:
+    """
+    Analyzes the HTML content and headers of a URL to identify the underlying technology stack.
+
+    Args:
+        url (str): The target URL to analyze.
+
+    Returns:
+        dict | str: A dictionary containing 'technologies' (list) and 'headers',
+                     or an error message string if the analysis fails.
+    """
     try:
         content = get_html(url)
         if isinstance(content, str):

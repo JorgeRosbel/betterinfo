@@ -1,6 +1,16 @@
 import requests
 
-def find_subdomains_passive(domain):
+def find_subdomains_passive(domain :str) -> list[str]:
+    """
+    Performs passive subdomain enumeration by querying Certificate Transparency (CT) logs via crt.sh.
+
+    Args:
+        domain (str): The target domain name to search for.
+
+    Returns:
+        list[str]: A unique list of discovered subdomains.
+    """
+
     url = f"https://crt.sh/?q=%25.{domain}&output=json"
     subdomains = set()
     
@@ -19,7 +29,17 @@ def find_subdomains_passive(domain):
         
     return list(subdomains)
 
-def sublist3r_style_search(domain):
+def sublist3r_style_search(domain :str) -> list[str]:
+    """
+    Aggregates subdomains from multiple passive OSINT sources (CRT.sh, HackerTarget, and AlienVault).
+
+    Args:
+        domain (str): The target domain name.
+
+    Returns:
+        list[str]: A sorted list of unique subdomains found across all sources.
+    """
+    
     all_subdomains = set()
     
     

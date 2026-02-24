@@ -1,18 +1,35 @@
 import requests
 from termcolor import colored
 import time
+from typing import TypedDict, List
 
-def check_exposed_files(domain, rate_limit: int | float | None = None) -> list[dict[str, str | int]] | None:
+class ExposedFileResult(TypedDict):
+    tested_path: str
+    status: int | str
+
+
+def check_exposed_files(domain, rate_limit: int | float | None = None) -> List[ExposedFileResult] | None:
     """
     Scans for common exposed files and returns a list of results.
     """
     paths = [
-        '/.env', '/.env.local', '/.git/config', '/web.config',
-        '/config.php.bak', '/wp-config.php.bak', '/wp-config.php.old',
-        '/backup.sql', '/db.sql', '/dump.sql', '/backup.zip', 
-        '/phpinfo.php', '/info.php', '/error_log', '/debug.log', 
-        '/wp-content/debug.log', '/wp-json/wp/v2/users', '/.htaccess.bak'
-    ]
+    '/.env', '/.env.local', '/.env.prod', '/.env.dev', '/.env.bak', 
+    '/.aws/credentials', '/.vscode/sftp.json', '/.ssh/id_rsa',
+    '/.git/config', '/.git/index', '/.gitignore', '/.svn/entries',
+    '/wp-config.php.bak', '/wp-config.php.old', '/wp-config.php.save', '/wp-config.php~',
+    '/wp-content/debug.log', '/wp-content/uploads/debug.log',
+    '/wp-json/wp/v2/users', '/wp-links-opml.php', '/xmlrpc.php',
+    '/backup.sql', '/db.sql', '/db_backup.sql', '/database.sql', '/dump.sql',
+    '/db.zip', '/backup.zip', '/site.zip', '/www.zip', '/old.zip',
+    '/latest.tar.gz', '/site.tar.gz', '/backup.tar.gz', '/full.sql',
+    '/phpinfo.php', '/info.php', '/status', '/server-status',
+    '/error_log', '/error.log', '/access.log', '/debug.log',
+    '/.htaccess.bak', '/.htpasswd', '/web.config',
+    '/package.json', '/composer.json', '/composer.lock', 
+    '/.npmrc', '/yarn.lock', '/docker-compose.yml',
+    '/backup/', '/backups/', '/css/', '/js/', '/images/', '/uploads/', 
+    '/sql/', '/temp/', '/tmp/', '/old/'
+]
 
     headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36",

@@ -3,7 +3,16 @@ from bs4 import BeautifulSoup
 from termcolor import colored
 import time
 
-def fetcher(url):
+def fetcher(url :str) -> str | None:
+    """
+    Performs a basic GET request to a domain and returns its raw HTML content.
+
+    Args:
+        url (str): The domain or URL to fetch (prepended with https://).
+
+    Returns:
+        str | None: The raw HTML source code if successful, or None if the request fails.
+    """
     headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36",
         "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8",
@@ -19,7 +28,16 @@ def fetcher(url):
         return None
     
 
-def extract_urls_from_sitemap(sitemap_content):
+def extract_urls_from_sitemap(sitemap_content :str) -> list[str]:
+    """
+    Parses XML sitemap content to extract all listed URLs (loc tags).
+
+    Args:
+        sitemap_content (str): The raw XML content of a sitemap.
+
+    Returns:
+        list[str]: A list of all URLs found within the sitemap.
+    """
     urls = []
     if sitemap_content:
         soup = BeautifulSoup(sitemap_content, "xml")
@@ -29,6 +47,16 @@ def extract_urls_from_sitemap(sitemap_content):
 
 
 def find_sitemaps(url:str, rate_limit:int | float | None = None) -> list[str] | None:
+    """
+    Brute-forces common sitemap locations and extracts all discovered URLs.
+
+    Args:
+        url (str): The target domain or base URL.
+        rate_limit (int | float | None): Delay in seconds between requests.
+
+    Returns:
+        list[str] | None: A sorted list of all unique URLs found, or None if no sitemaps exist.
+    """
     urls = []
     sitemaps_names = [
     "/sitemap.xml",
@@ -91,7 +119,16 @@ def find_sitemaps(url:str, rate_limit:int | float | None = None) -> list[str] | 
         return sorted(urls)
     return None
 
-def find_robots(url):
+def find_robots(url :str) -> str | None:
+    """
+    Attempts to retrieve the robots.txt file from the target domain.
+
+    Args:
+        url (str): The target domain or base URL.
+
+    Returns:
+        str | None: The raw content of robots.txt if found, otherwise None.
+    """
     try:
        fetcher_response = fetcher(f'{url}/robots.txt')
        if fetcher_response:

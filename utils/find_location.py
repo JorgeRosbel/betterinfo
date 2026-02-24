@@ -1,5 +1,5 @@
 import requests
-from typing import List, TypedDict
+from typing import TypedDict
 
 class GeoLocation(TypedDict):
     country: str
@@ -9,6 +9,16 @@ class GeoLocation(TypedDict):
 
 
 def get_geo_location(ip: str) -> GeoLocation | None:
+    """
+    Retrieves geographical and ISP data for a given IP address using the ip-api service.
+
+    Args:
+        ip (str): The target IP address.
+
+    Returns:
+        dict | None: A dictionary containing country, city, isp, and coordinates, 
+                     or None if the lookup fails.
+    """
     try:
         response = requests.get(f"http://ip-api.com/json/{ip}?fields=status,message,country,regionName,city,zip,lat,lon,isp,org,as")
         data = response.json()

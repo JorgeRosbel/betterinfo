@@ -16,6 +16,17 @@ class ErrorInfo(TypedDict):
 
 
 def whois(domain: str) -> DomainInfo | ErrorInfo:
+    """
+    Retrieves domain registration data using the RDAP protocol.
+
+    Args:
+        domain (str): The domain name to query (e.g., 'example.com').
+
+    Returns:
+        dict: A dictionary containing domain details like nameservers, registrar, 
+              creation/expiration dates, and remaining days, or an error message.
+    """
+    
     url = f"https://rdap.verisign.com/com/v1/domain/{domain}"
     
     try:
