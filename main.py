@@ -10,6 +10,7 @@ from termcolor import colored
 from utils.find_location import get_geo_location
 from utils.find_mail_servers import find_mail_server, find_txt_records
 from utils.sitemaps_robots import find_sitemaps, find_robots
+from utils.exposed_files import check_exposed_files
 
 def main():
    
@@ -29,6 +30,7 @@ def main():
     ip_address = None
     sitemaps = None
     robots = None
+    exposed_files = None
 
    
     p1 = log.progress("")
@@ -45,6 +47,8 @@ def main():
         p1.status(colored("Searching for sitemaps and robots.txt...", "cyan"))
         sitemaps = find_sitemaps(args.domain)
         robots = find_robots(args.domain)
+        p1.status(colored("Checking for exposed files...", "cyan"))
+        exposed_files = check_exposed_files(args.domain)
     p1.success(colored("Analysis complete!", "green"))
 
     
@@ -131,6 +135,14 @@ def main():
             print(colored(robots, "yellow"))
         else:
             print(colored("\n[!] No robots.txt found or accessible.", "red", attrs=["bold"]))
+
+        print(colored("\n----- Exposed Files Check -----\n", "grey",attrs=["bold"]))
+        if exposed_files:
+            for entry in exposed_files:
+                status_color = "green" if entry["status"] == 200 else "yellow" if entry["status"] == "Error" else "red"
+                print(colored(f"{entry['tested_path']}: ", "cyan",attrs=["bold"]) + colored(str(entry["status"]), status_color))
+        else:
+            print(colored("\n[!] No exposed files found or accessible.", "red", attrs=["bold"]))
 
         print(colored("\n-----END OF ANALYSIS-----", "grey"))
     
