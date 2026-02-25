@@ -12,6 +12,7 @@ from utils.find_location import get_geo_location
 from utils.find_mail_servers import find_mail_server, find_txt_records
 from utils.sitemaps_robots import find_sitemaps, find_robots
 from utils.exposed_files import check_exposed_files
+from utils.find_os import find_os
 
 def validate_domain(domain):
     pattern = r'^([a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}$'
@@ -50,6 +51,7 @@ def main():
     sitemaps = None
     robots = None
     exposed_files = None
+    o_system = None
 
    
     p1 = log.progress("")
@@ -59,6 +61,7 @@ def main():
         p1.status(colored("Performing technology analysis...", "cyan"))
         tech = find_tech(args.domain)
         ip_address = get_ip(args.domain)
+        o_system = find_os(ip_address)
 
     p1.status(colored("Finding subdomains...", "cyan"))
     subdomains = sublist3r_style_search(args.domain)
@@ -80,6 +83,11 @@ def main():
         for key, value in metadata.items():
             print(colored(f"{key.capitalize()}: ", "cyan",attrs=["bold"]) + colored(str(value), "yellow"))
 
+    if is_active and o_system:
+        print(colored("\n----- Operative System -----\n", "grey", attrs=["bold"]))
+        print(colored(f"{o_system}", "yellow" ))
+
+
     
     print(colored("\n----- Whois & Registry Data -----\n", "grey", attrs=["bold"]))
 
@@ -93,7 +101,6 @@ def main():
 
     if is_active and tech and isinstance(tech, dict):
         print(colored("\n----- Technology Analysis -----\n", "grey",attrs=["bold"]))
-        
         for i, tech_name in enumerate(tech["technologies"], start=1):
             print(colored(f"{i}. ", "cyan",attrs=["bold"]) + colored(tech_name, "yellow"))
         
@@ -196,6 +203,9 @@ def main():
 ----- Website Metadata -----
 Title: {tech['metadata']['title'] if tech and isinstance(tech, dict) and 'metadata' in tech else 'N/A'}
 Description: {tech['metadata']['description'] if tech and isinstance(tech, dict) and 'metadata' in tech else 'N/A'}
+
+----- Operative System -----
+{o_system}
 
 ----- Whois & Registry Data -----
 {chr(10).join([f"{key.capitalize()}: {value if not isinstance(value, list) else ' | '.join(value)}" for key, value in basic.items()])}
