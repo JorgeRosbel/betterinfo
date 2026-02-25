@@ -58,8 +58,8 @@ def find_os(ip:str)->str:
         return "Not Found"
 
     if ttl >= 0 and ttl <= 64:
-        return "Linux"
+        return f"Linux (ttl={ttl})"
     elif ttl >= 65 and ttl <= 128:
-        return "Windows"
+        return f"Windows (ttl={ttl})"
     else:
-        return "Not Found"
+        return f"Not Found (ttl={ttl})"

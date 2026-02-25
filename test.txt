@@ -1,0 +1,167 @@
+
+----- Website Metadata -----
+Title: Geofisik â Expertos en IngenierÃ­a GeofÃ­sica Aplicada a la Geotecnia
+Description: Geofisik es una empresa Mexicana que se especializa en la geofÃ­sica aplicada a la geotecnia y la mecÃ¡nica de suelos. Ofrece soluciones innovadoras que permiten reducir costos y riesgos en obras civiles y de infraestructura.
+
+----- Operative System -----
+Linux (ttl=50)
+
+----- Whois & Registry Data -----
+Domain_name: geofisik.com
+Nameservers: ns1.dns-parking.com | ns2.dns-parking.com
+Registrar: http://www.namecheap.com
+Creation_date: 10/03/24
+Expiration_date: 10/03/26
+Remaining_time_in_days: 12
+Status: client transfer prohibited
+Edge IP Address: 147.79.119.55
+
+----- Technology Analysis -----
+1. Astro
+2. Google Analytics
+3. Google Tag Manager
+4. Tailwind CSS
+
+--- WordPress Plugins Found ---
+N/A
+
+----- Subdomains Found -----
+1. ftp.geofisik.com
+2. mail.geofisik.com
+3. tool.geofisik.com
+4. webdisk.geofisik.com
+5. www.geofisik.com
+
+----- Geolocation Data -----
+Country: France
+City: Paris
+Internet Service Provider: Hostinger International Limited
+Coordinates: 48.8558, 2.3494
+
+----- Mail Servers (MX Records) -----
+Preference: 10, Server: mx2.hostinger.com
+Preference: 5, Server: mx1.hostinger.com
+
+----- TXT Records -----
+v=spf1 include:_spf.mail.hostinger.com ~all
+
+----- Internal URLs Found -----
+1. https://geofisik.com
+2. https://geofisik.com/blog
+3. https://geofisik.com/blog/2
+4. https://geofisik.com/blog/3
+5. https://geofisik.com/blog/4
+6. https://geofisik.com/blog/5
+7. https://geofisik.com/blog/6
+8. https://geofisik.com/blog/7
+9. https://geofisik.com/blog/categoria/condiciones-del-suelo
+10. https://geofisik.com/blog/categoria/costos-y-beneficios
+11. https://geofisik.com/blog/categoria/innovacion-tecnologica
+12. https://geofisik.com/blog/categoria/metodos-geofisicos
+13. https://geofisik.com/blog/categoria/metodos-geofisicos/2
+14. https://geofisik.com/blog/categoria/metodos-geofisicos/3
+15. https://geofisik.com/blog/categoria/obras-civiles
+16. https://geofisik.com/blog/condiciones-del-suelo/arcillas-expansivas-san-luis-potosi-metodos-electricos
+17. https://geofisik.com/blog/condiciones-del-suelo/cenotes-cavernas-quintana-roo
+18. https://geofisik.com/blog/condiciones-del-suelo/error-comun-cimentaciones-estudio-sismico
+19. https://geofisik.com/blog/condiciones-del-suelo/estudios-geofisicos-cdmx-normativa-suelo-blando
+20. https://geofisik.com/blog/condiciones-del-suelo/estudios-suelos-vivienda-analisis-geofisico
+21. https://geofisik.com/blog/condiciones-del-suelo/licuefaccion-costas-pacifico-evaluacion-geofisica
+22. https://geofisik.com/blog/condiciones-del-suelo/rellenos-sanitarios-abandonados-identificacion-geofisica
+23. https://geofisik.com/blog/condiciones-del-suelo/suelos-salinos-coahuila-caracterizacion-electrica
+24. https://geofisik.com/blog/costos-y-beneficios/analisis-costo-beneficio-geofisica-vs-metodos-tradicionales
+25. https://geofisik.com/blog/costos-y-beneficios/costo-estudio-geofisico-vs-riesgos-construir
+26. https://geofisik.com/blog/costos-y-beneficios/impacto-financiero-omite-estudios-geotecnicos
+27. https://geofisik.com/blog/costos-y-beneficios/invertir-en-geofisica-reduce-sobrecostos-construccion
+28. https://geofisik.com/blog/costos-y-beneficios/roi-geofisica-costos-cimentacion
+29. https://geofisik.com/blog/innovacion-tecnologica/blockchain-en-geofisica-certificacion-digital
+30. https://geofisik.com/blog/innovacion-tecnologica/drones-geofisica-magnetometria-aerea
+31. https://geofisik.com/blog/innovacion-tecnologica/geofisica-4-0-iot-monitoreo-continuo-estabilidad
+32. https://geofisik.com/blog/innovacion-tecnologica/insar-detecta-subsidencia-complejo-industrial
+33. https://geofisik.com/blog/innovacion-tecnologica/inteligencia-artificial-machine-learning-tomografias-electricas
+34. https://geofisik.com/blog/innovacion-tecnologica/interferometria-insar-monitoreo-satelital-subsidencia
+35. https://geofisik.com/blog/innovacion-tecnologica/realidad-aumentada-estructuras-subterraneas
+36. https://geofisik.com/blog/innovacion-tecnologica/tendencias-2025-integracion-ia-machine-learning-interpretacion-geofisica
+37. https://geofisik.com/blog/metodos-geofisicos/aeropuertos-caracterizacion-pistas-aterrizaje-metodos-sismicos
+38. https://geofisik.com/blog/metodos-geofisicos/cambio-climatico-geotecnia-metodos-geofisicos
+39. https://geofisik.com/blog/metodos-geofisicos/comparativa-metodos-refraccion-sismica-masw-tomografia-electrica
+40. https://geofisik.com/blog/metodos-geofisicos/desafio-karst-yucateco-geofisica-colapsos-riviera-maya
+41. https://geofisik.com/blog/metodos-geofisicos/deteccion-de-cavernas-metodos-geofisicos
+42. https://geofisik.com/blog/metodos-geofisicos/geofisica-aplicada-geotecnia
+43. https://geofisik.com/blog/metodos-geofisicos/geofisica-para-la-industria-petrolera
+44. https://geofisik.com/blog/metodos-geofisicos/geofisica-para-pozos-de-agua
+45. https://geofisik.com/blog/metodos-geofisicos/georradar-deteccion-servicios-sin-romper-pavimento
+46. https://geofisik.com/blog/metodos-geofisicos/guia-metodo-hvsr-nakamura
+47. https://geofisik.com/blog/metodos-geofisicos/lecciones-estudios-geofisicos-mexico
+48. https://geofisik.com/blog/metodos-geofisicos/masw-vs-refraccion-sismica-estudio-suelos-2025
+49. https://geofisik.com/blog/metodos-geofisicos/metodos-destructivos-vs-no-destructivos-geofisica-construccion-sostenible
+50. https://geofisik.com/blog/metodos-geofisicos/minas-abandonadas-zacatecas-localizacion-tuneles-georradar
+51. https://geofisik.com/blog/metodos-geofisicos/naves-industriales-optimizacion-zapatas-corridas-masw
+52. https://geofisik.com/blog/metodos-geofisicos/optimizacion-cimentaciones-tomografia-electrica
+53. https://geofisik.com/blog/metodos-geofisicos/presas-bordos-deteccion-filtraciones-metodos-geoelectricos
+54. https://geofisik.com/blog/metodos-geofisicos/profundidad-estudio-geofisico
+55. https://geofisik.com/blog/metodos-geofisicos/sondeo-electrico-vertical-sev-metodo-clasico-estudios-hidrogeologicos
+56. https://geofisik.com/blog/metodos-geofisicos/subsidencia-valle-de-mexico-insar
+57. https://geofisik.com/blog/metodos-geofisicos/tomografia-electrica-la-radiografia-del-subsuelo-que-previene-fallas-en-cimentaciones
+58. https://geofisik.com/blog/obras-civiles/fallas-geologicas-mapeo-sismico
+59. https://geofisik.com/blog/obras-civiles/geofisica-aplicada-carreteras-capacidad-soporte-pavimento
+60. https://geofisik.com/blog/obras-civiles/geofisica-aplicada-hospitales-escuelas-zona-sismica
+61. https://geofisik.com/blog/obras-civiles/parques-solares-evaluacion-geotecnica
+62. https://geofisik.com/blog/obras-civiles/puentes-vehiculares-estudios-geofisicos-cimentaciones-profundas
+63. https://geofisik.com/blog/obras-civiles/suelos-volcanicos-jalisco-caracterizacion-geofisica-cimentaciones-especiales
+64. https://geofisik.com/blog/obras-civiles/temporada-huracanes-2025-evaluacion-post-siniestro-geofisica
+65. https://geofisik.com/blog/obras-civiles/torres-telecomunicaciones-estudios-geofisicos-cimentaciones-5g
+66. https://geofisik.com/blog/tag/beneficios
+67. https://geofisik.com/blog/tag/carreteras
+68. https://geofisik.com/blog/tag/casos
+69. https://geofisik.com/blog/tag/cavernas
+70. https://geofisik.com/blog/tag/cimentaciones
+71. https://geofisik.com/blog/tag/cimentaciones/2
+72. https://geofisik.com/blog/tag/clima
+73. https://geofisik.com/blog/tag/costos
+74. https://geofisik.com/blog/tag/georradar
+75. https://geofisik.com/blog/tag/innovacion
+76. https://geofisik.com/blog/tag/innovacion/2
+77. https://geofisik.com/blog/tag/insar
+78. https://geofisik.com/blog/tag/metodos
+79. https://geofisik.com/blog/tag/metodos/2
+80. https://geofisik.com/blog/tag/metodos/3
+81. https://geofisik.com/blog/tag/metodos/4
+82. https://geofisik.com/blog/tag/obras-civiles
+83. https://geofisik.com/blog/tag/pozos
+84. https://geofisik.com/blog/tag/sev
+85. https://geofisik.com/blog/tag/sismica
+86. https://geofisik.com/blog/tag/sismica/2
+87. https://geofisik.com/blog/tag/subsuelo
+88. https://geofisik.com/blog/tag/subsuelo/2
+89. https://geofisik.com/blog/tag/subsuelo/3
+90. https://geofisik.com/blog/tag/suelos
+91. https://geofisik.com/blog/tag/suelos/2
+92. https://geofisik.com/blog/tag/tecnologia
+93. https://geofisik.com/blog/tag/tecnologia/2
+94. https://geofisik.com/blog/tag/tendencias
+95. https://geofisik.com/blog/tag/tomografia
+96. https://geofisik.com/blog/tag/vivienda
+97. https://geofisik.com/privacy
+98. https://geofisik.com/sitemap-0.xml
+99. https://geofisik.com/terms
+100. https://geofisik.com/tipo/comparativas
+101. https://geofisik.com/tipo/guias
+102. https://geofisik.com/tipo/reviews
+103. https://geofisik.com/tipo/tops
+
+----- robots.txt Content -----
+User-agent: *
+Disallow:
+
+Sitemap: https://geofisik.com/sitemap-index.xml
+
+----- Exposed Files Check -----
+https://geofisik.com/.git/config: 403 [Access Restricted]
+https://geofisik.com/.git/index: 403 [Access Restricted]
+https://geofisik.com/.svn/entries: 403 [Access Restricted]
+https://geofisik.com/.htaccess.bak: 403 [Access Restricted]
+https://geofisik.com/.htpasswd: 403 [Access Restricted]
+Summary: 0 potentially exposed files found.
+-----END OF ANALYSIS-----   
+        
