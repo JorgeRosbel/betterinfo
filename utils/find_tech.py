@@ -124,10 +124,12 @@ def get_html(url: str) -> HtmlContent | str:
     }   
 
     headers_to_check = [
-    "X-Powered-By", "Server", "X-AspNet-Version", 
-    "Strict-Transport-Security",
-    "X-Frame-Options", "X-Content-Type-Options"
-    ]
+    "X-Powered-By", "Server", "X-AspNet-Version", "X-Runtime", "X-Version",
+    "Strict-Transport-Security", "X-Frame-Options", "X-Content-Type-Options",
+    "Content-Security-Policy", "Referrer-Policy", "Permissions-Policy",
+    "X-Forwarded-For", "X-Real-IP", "X-Forwarded-Host", "Access-Control-Allow-Origin",
+    "X-Cache", "Via", "Age", "X-Cache-Lookup"
+]
 
     headeres_found = {}
 

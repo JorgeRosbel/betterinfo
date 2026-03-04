@@ -13,6 +13,7 @@ from utils.find_mail_servers import find_mail_server, find_txt_records
 from utils.sitemaps_robots import find_sitemaps, find_robots
 from utils.exposed_files import check_exposed_files
 from utils.find_os import find_os
+from utils.audit_mail import check_email_security
 
 def validate_domain(domain):
     pattern = r'^([a-zA-Z0-9]([a-zA-Z0-9\-]{0,61}[a-zA-Z0-9])?\.)+[a-zA-Z]{2,}$'
@@ -38,6 +39,13 @@ def main():
         dest="output_name",
         help="Set a custom output file name (default is domain_report.txt).", 
     )
+
+    parser.add_argument(
+        "-eS", "--email-security",
+        dest="email_security",
+        action="store_true",
+        help="Check email security"
+    )
    
     
 
@@ -54,6 +62,8 @@ def main():
     robots = None
     exposed_files = None
     o_system = None
+    report = None
+    email_report_text = None
 
    
     p1 = log.progress("")
@@ -67,6 +77,9 @@ def main():
 
     p1.status(colored("Finding subdomains...", "cyan"))
     subdomains = sublist3r_style_search(args.domain)
+
+    if args.email_security:
+        report = check_email_security(args.domain)
 
     if is_active:
         rate = f"(rate_limit:{args.rate_limit}s)" if args.rate_limit else "(no rate limit)"
@@ -161,6 +174,49 @@ def main():
                     print(colored("    [!] Warning: Policy is set to SoftFail (~all).", "red"))
             else:
                 print(f"[-] {record}")
+    
+    if report:
+        
+        print(colored("\n----- Email Security -----\n", "grey",attrs=["bold"]))
+
+        print(colored("1. ", "cyan", attrs=["bold"]) + colored("DMARC Analysis", "yellow"))
+        if report["dmarc"]["status"] == "Found":
+            print(f"   Status: {colored('FOUND', 'green')} | Policy: {colored(report['dmarc']['policy'], 'white')} | Risk: {colored(report['dmarc']['risk'], 'red')}")
+        else:
+            print(f"   Status: {colored('MISSING', 'red')} | Risk: {colored('Critical', 'red', attrs=['bold'])}")
+
+        print(colored("2. ", "cyan", attrs=["bold"]) + colored("DKIM Analysis", "yellow"))
+        if report["dkim"]["status"] == "Found":
+            print(f"   Status: {colored('FOUND', 'green')} | Selector: {colored(report['dkim']['active_selector'], 'white')}")
+        else:
+            print(f"   Status: {colored('NOT FOUND', 'red')} | Risk: {colored('High (No Signature)', 'yellow')}")
+
+        print(colored("3. ", "cyan", attrs=["bold"]) + colored("Reputation Score", "yellow"))
+        score_display = f"{report['reputation']['score']}/100"
+        color_score = "red" if report["reputation"]["warning"] else "green"
+        print(f"   Score: {colored(score_display, color_score)} | Status: {colored(report['reputation']['status'], color_score)}")
+
+        email_report_text = f"""
+        ----- Email Security -----
+
+        1. DMARC Analysis
+        """
+
+        if report["dmarc"]["status"] == "Found":
+            email_report_text += f"   Status: FOUND | Policy: {report['dmarc']['policy']} | Risk: {report['dmarc']['risk']}\n"
+        else:
+            email_report_text += "   Status: MISSING | Risk: Critical\n"
+
+        email_report_text += "2. DKIM Analysis\n"
+
+        if report["dkim"]["status"] == "Found":
+            email_report_text += f"   Status: FOUND | Selector: {report['dkim']['active_selector']}\n"
+        else:
+            email_report_text += "   Status: NOT FOUND | Risk: High (No Signature)\n"
+
+        email_report_text += f"""3. Reputation Score
+        Score: {score_display} | Status: {report['reputation']['status']}
+        """
 
     if is_active:
         print(colored("\n----- Internal URLs Found -----\n", "grey",attrs=["bold"]))
@@ -238,6 +294,8 @@ Coordinates: {location['coordinates'] if location else 'N/A'}
 
 ----- TXT Records -----
 {chr(10).join([f"{record}" for record in txt_records]) if txt_records else 'N/A'}
+
+{email_report_text if report else ""}
 
 ----- Internal URLs Found -----
 {chr(10).join([f"{i}. {sitemap}" for i, sitemap in enumerate(sitemaps, start=1)]) if sitemaps else 'N/A'}
