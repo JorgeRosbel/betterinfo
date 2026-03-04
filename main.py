@@ -31,16 +31,18 @@ def main():
         "-a", "--active",
         dest="active",
         action="store_true",
-        help="Modo de escaneo: pasivo (consultas a APIs) o activo (interacción directa)"
+        help="Active Scan: Direct interaction with the target"
     )
     parser.add_argument(
         "-oN", "--output-name",
         dest="output_name",
         help="Set a custom output file name (default is domain_report.txt).", 
     )
+   
     
 
     args = parser.parse_args()
+
     if not validate_domain(args.domain):
         print(colored("Error: Invalid domain format. Please provide a valid domain (e.g., domain.com).", "red"))
         return
@@ -139,6 +141,8 @@ def main():
         print(colored(f"City: ", "cyan",attrs=["bold"]) + colored(location['city'], "yellow"))
         print(colored(f"Internet Service Provider: ", "cyan",attrs=["bold"]) + colored(location['isp'], "yellow"))
         print(colored(f"Coordinates: ", "cyan",attrs=["bold"]) + colored(location['coordinates'], "yellow"))
+        lat, long = location["coordinates"].split(",")
+        print(colored("Google Maps URL: ", "cyan", attrs=["bold"]) + colored(f"https://www.google.com/maps/@{lat.replace(" ", "")},{long.replace(" ", "")},15z", "yellow") )
 
     mail_servers = find_mail_server(args.domain)
     if mail_servers:
@@ -197,7 +201,10 @@ def main():
 
     print(colored("\n-----END OF ANALYSIS-----", "grey"))
 
+    file_name = args.output_name if args.output_name else None
 
+    if not file_name:
+        return
     
     full_text = f"""
 ----- Website Metadata -----
@@ -248,8 +255,7 @@ Summary: {sum(1 for e in exposed_files if e['status'] == 200) if exposed_files e
 -----END OF ANALYSIS-----   
         """
     
-
-    file_name = args.output_name if args.output_name else f"{args.domain}_report.txt"
+   
     
     with open(file_name, "w") as f:
         f.write(full_text)
