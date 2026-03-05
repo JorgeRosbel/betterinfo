@@ -14,6 +14,8 @@ class TechInfo(TypedDict):
     headers:dict[str, str]
     metadata: Metadata
     plugins: List[dict[str, str]]
+    emails: List[str]
+    phones: List[str]
 
 
 def get_wordpress_plugins(html: str) -> list[dict]:
@@ -145,6 +147,35 @@ def get_html(url: str) -> HtmlContent | str:
         return {"html": response.text, "headers": headeres_found}
     except requests.exceptions.RequestException as e:
         return f"Error fetching HTML content: {e}"
+    
+
+def extract_emails(text:str) -> List[str]:
+    pattern = r'[a-zA-Z0-9._%+-]+@(?!.*(?:\.png|\.webp|\.jpg|\.jpeg|\.gif|\.svg))[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}'
+    
+    matches = re.findall(pattern, text)
+    
+    if matches:
+        unique_emails = list(set(matches))
+        return unique_emails
+    else:
+        return []
+    
+def extract_phone_numbers(text: str) -> List[str]:
+    pattern = r'(?:\+|00)[1-9][0-9]{0,2}[ -]?(?:\([0-9]{1,4}\)|[0-9]{1,4})(?:[ -]?[0-9]){6,12}'
+    
+    matches = re.findall(pattern, text)
+    
+    if matches:
+        cleaned_list = [re.sub(r'\D', '', phone) for phone in matches]
+        unique_phones = list(set(cleaned_list))
+        
+        final = []
+        for phone in unique_phones:
+            if 7 <= len(phone) <= 15:
+                final.append(f"+{phone}")
+        return final
+    else:
+        return []
 
 
 def find_tech(url: str) -> TechInfo | str:
@@ -163,6 +194,9 @@ def find_tech(url: str) -> TechInfo | str:
         if isinstance(content, str):
             return content  
         
+        emails = extract_emails(content["html"])
+        phones = extract_phone_numbers(content["html"])
+
         metadata = extract_metadata(content["html"])
         html = content["html"].lower()
         headers = content["headers"]
@@ -204,7 +238,14 @@ def find_tech(url: str) -> TechInfo | str:
         if not results:
             results.append("Unknown Technology")
 
-        return {"technologies": results, "headers": headers, "metadata": metadata , "plugins": get_wordpress_plugins(html)}
+        return {
+                "technologies": results, 
+                "headers": headers, 
+                "metadata": metadata , 
+                "plugins": get_wordpress_plugins(html),
+                "emails": emails,
+                "phones": phones
+                }
     
     except Exception as e:
         return f"Error analyzing technology: {e}"

@@ -64,6 +64,7 @@ def main():
     o_system = None
     report = None
     email_report_text = None
+    contact_report = None
 
    
     p1 = log.progress("")
@@ -98,9 +99,45 @@ def main():
         for key, value in metadata.items():
             print(colored(f"{key.capitalize()}: ", "cyan",attrs=["bold"]) + colored(str(value), "yellow"))
 
+        report_lines = ["----- Contact Information -----"]
+
+        if len(tech["emails"]) > 0 or len(tech["phones"]) > 0:
+            if len(tech["emails"]) > 0:
+                report_lines.append("\nEmails:")
+                for i, email in enumerate(tech["emails"], start=1):
+                    report_lines.append(f"  {i}. {email}")
+            
+          
+            if len(tech["phones"]) > 0:
+                report_lines.append("\nPhones:")
+                for i, phone in enumerate(tech["phones"], start=1):
+                    report_lines.append(f"  {i}. {phone}")
+        else:
+            report_lines.append("\nNo contact information found.")
+
+        contact_report = "\n".join(report_lines)
+        
+        if len(tech["emails"]) > 0 or len(tech["phones"]) > 0:
+            print(colored("\n----- Contact Information -----\n", "grey", attrs=["bold"]))
+            if len(tech["emails"]) > 0:
+                print(colored(f"Emails: ", "cyan",attrs=["bold"]))
+                for i,email in enumerate(tech["emails"], start=1):
+                    print(colored(f"{i}. ", "cyan") + colored(f"{email}", "yellow"))
+                print("")
+            if len(tech["phones"]) > 0:
+                print(colored(f"Phones: ", "cyan",attrs=["bold"]))
+                for i,phone in enumerate(tech["phones"], start=1):
+                    print(colored(f"{i}. ", "cyan") + colored(f"{phone}", "yellow"))
+
+
+                
+                
+
     if is_active and o_system:
         print(colored("\n----- Operative System -----\n", "grey", attrs=["bold"]))
         print(colored(f"{o_system}", "yellow" ))
+
+
 
 
     
@@ -266,6 +303,8 @@ def main():
 ----- Website Metadata -----
 Title: {tech['metadata']['title'] if tech and isinstance(tech, dict) and 'metadata' in tech else 'N/A'}
 Description: {tech['metadata']['description'] if tech and isinstance(tech, dict) and 'metadata' in tech else 'N/A'}
+
+{contact_report if contact_report else ""}
 
 ----- Operative System -----
 {o_system}
