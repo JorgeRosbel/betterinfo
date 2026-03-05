@@ -162,16 +162,19 @@ def find_sitemaps(url:str, rate_limit:int | float | None = None) -> list[str] | 
         except requests.RequestException:
             pass
     if urls:
-        print(" " * 100, end="\r", flush=True) 
+       
         final_urls = []
 
-        for item in urls:
+        for i,item in enumerate(urls, start=1):
             if "sitemap" in item:
+                print(colored(f"[i] checking for sitemap: {item} ({i}/{len(urls)}) ", "grey", attrs=["bold"]).ljust(80), end="\r", flush=True)
                 fetcher_response = fetcher(item)
                 if fetcher_response:
                     final_urls.extend(extract_urls_from_sitemap(fetcher_response))
             else:
                 final_urls.extend(item)
+        
+        print(" " * 100, end="\r", flush=True) 
 
 
         return sorted(final_urls)
